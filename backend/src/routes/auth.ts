@@ -30,8 +30,9 @@ router.post('/register', async (req, res) => {
     const user = await createUser(username, email, password);
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET!, { expiresIn: '1h' });
     res.status(201).json({ token, user: { id: user.id, username, email } });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    res.status(400).json({ error: message });
   }
 });
 
@@ -44,8 +45,9 @@ router.post('/login', async (req, res) => {
     }
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET!, { expiresIn: '1h' });
     res.json({ token, user: { id: user.id, username: user.username, email } });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    res.status(400).json({ error: message });
   }
 });
 

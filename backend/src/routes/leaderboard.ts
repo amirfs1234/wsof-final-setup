@@ -34,8 +34,9 @@ router.get('/:gameType', async (req, res) => {
 
     await cacheLeaderboard(gameType, leaderboard);
     res.json(leaderboard);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    res.status(400).json({ error: message });
   }
 });
 

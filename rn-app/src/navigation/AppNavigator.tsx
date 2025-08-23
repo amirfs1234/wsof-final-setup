@@ -4,12 +4,14 @@ import LoginScreen from '@/screens/LoginScreen';
 import PyramidScreen from '@/screens/PyramidScreen';
 import BlowOutScreen from '@/screens/BlowOutScreen';
 import LeaderboardScreen from '@/screens/LeaderboardScreen';
+import SplashScreen from '@/screens/SplashScreen';
 
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="Splash">
+      <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Pyramid" component={PyramidScreen} />
       <Stack.Screen name="BlowOut" component={BlowOutScreen} />

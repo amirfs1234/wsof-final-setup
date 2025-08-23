@@ -14,7 +14,7 @@ const blowoutSchema = z.object({
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const { team } = blowoutSchema.parse(req.body);
-    const userId = req.user.id;
+    const userId = (req as any).user.id;
     const game = await createBlowOutGame(userId, team);
     
     // Calculate score based on team stats
@@ -24,20 +24,22 @@ router.post('/', authMiddleware, async (req, res) => {
     await pool.query('UPDATE blowout_games SET score = $1 WHERE id = $2', [score, game.id]);
     
     res.json(game);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    res.status(400).json({ error: message });
   }
 });
 
 router.get('/:id', authMiddleware, async (req, res) => {
   try {
     const game = await getBlowOutGame(req.params.id);
-    if (!game || game.user_id !== req.user.id) {
+    if (!game || (req as any).user && game.user_id !== (req as any).user.id) {
       return res.status(404).json({ error: 'Game not found' });
     }
     res.json(game);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    res.status(400).json({ error: message });
   }
 });
 
